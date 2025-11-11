@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import type { FormEvent } from 'react'
 import type { Bases } from '../models/bases'
-import type { Marcas } from '../models/marcas'
+import { Marcas } from '../models/marcas'
 import type { Tipo } from '../models/tipo'
 import { Recipiente } from '../models/recipiente'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
 
 export interface Color {
     name: string
@@ -28,17 +30,17 @@ interface SearchResult {
 export default function FormColor({ onSubmit }: FormColorProps) {
 
     const [bases, setBases] = useState<Bases[]>([])
-    const [marcas , setMarcas] = useState<Marcas[]>([])
-    const [tipoTem , setipoTem] = useState<Tipo[]>([])
+    const [marcas, setMarcas] = useState<Marcas[]>([])
+    const [tipoTem, setipoTem] = useState<Tipo[]>([])
     //en un futuro cambiar esta parte ya que no se si es recipiente o cantidad
-    const [recipiente , setRecipiente] = useState<Recipiente[]>([])
+    const [recipiente, setRecipiente] = useState<Recipiente[]>([])
 
     //temporal del useefect cargar datos pintura 
     const basesList: Bases[] = [
         { id: 1, nombre: "Base BP" },
         { id: 2, nombre: "Base EP" },
-        { id: 2, nombre: "Base I" },
-        { id: 2, nombre: "Base UI" },
+        { id: 3, nombre: "Base I" },
+        { id: 4, nombre: "Base UI" },
     ];
 
     const tipoList: Tipo[] = [
@@ -53,15 +55,18 @@ export default function FormColor({ onSubmit }: FormColorProps) {
         { id: 2, nombre: "Permalatex" },
         { id: 2, nombre: "Super Corona" },
     ];
-    
+
     useEffect(() => {
 
-        setBases
+        setBases(basesList)
+        setipoTem(tipoList)
+        setMarcas(marcaList)
 
+        setTipo(tipoList[0].id.toString())
+        setCalidad(marcaList[0].id.toString())
+        setBase(basesList[0].id.toString())
 
-
-
-    })
+    },[])
 
     const [name, setName] = useState<string>('')
     const [tipo, setTipo] = useState<string>('')
@@ -84,7 +89,7 @@ export default function FormColor({ onSubmit }: FormColorProps) {
                 const response = await fetch(
                     `https://api.sherwin-williams.com/prism/v1/search/condor?query=${encodeURIComponent(name)}&lng=es-EC&_corev=6.1.0`
                 )
-                
+
                 if (response.ok) {
                     const data = await response.json()
                     // Ajusta esta línea según la estructura real de la API
@@ -161,7 +166,7 @@ export default function FormColor({ onSubmit }: FormColorProps) {
                         className="p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:outline-none"
                         required
                     />
-                    
+
                     {/* Resultados de búsqueda */}
                     {searchResults.length > 0 && (
                         <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-lg mt-1 max-h-60 overflow-y-auto z-10">
@@ -192,14 +197,14 @@ export default function FormColor({ onSubmit }: FormColorProps) {
                             ))}
                         </div>
                     )}
-                    
+
                     {/* Loading indicator */}
                     {isSearching && (
                         <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-lg mt-1 p-3">
                             <div className="text-gray-600 text-sm">Buscando colores...</div>
                         </div>
                     )}
-                    
+
                     {/* Información sobre la búsqueda */}
                     <div className="text-xs text-gray-500 mt-1">
                         Puedes buscar por nombre, brand key o número de color
@@ -210,53 +215,55 @@ export default function FormColor({ onSubmit }: FormColorProps) {
                     <label className="text-sm font-semibold text-gray-800">
                         Tipo:
                     </label>
-                    <select
+                    <Select
                         value={tipo}
-                        onChange={(e) => setTipo(e.target.value)}
-                        className="p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:outline-none"
+                        onChange={e => setTipo(String(e.target.value))}
+                        sx={{
+                            height: "35px"
+                        }}
                         required
                     >
-                        <option value="">Seleccione un tipo</option>
-                        <option value="Satinado">Satinado</option>
-                        <option value="Mate">Mate</option>
-                        <option value="Elastomerico">Elastomerico</option>
-                    </select>
+
+                        {tipoTem?.map((item, index) => (
+                            <MenuItem key={index} value={item.id}>{item.nombre}</MenuItem>
+                        ))}
+                    </Select>
                 </div>
 
                 <div className="flex flex-col gap-1">
                     <label className="text-sm font-semibold text-gray-800">
                         Base:
                     </label>
-                    <select
+                    <Select
                         value={base}
-                        onChange={(e) => setBase(e.target.value)}
-                        className="p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:outline-none"
+                        onChange={(e) => setBase(String(e.target.value))}
+                        sx={{
+                            height: "35px"
+                        }}
                         required
                     >
-                        <option value="">Seleccione una base</option>
-                        <option value="Base BP">Base BP</option>
-                        <option value="Base EP">Base EP</option>
-                        <option value="Base I">Base I</option>
-                        <option value="Base UI">Base UI</option>
-                    </select>
+                        {bases?.map((item, index) => (
+                            <MenuItem key={index} value={item.id}>{item.nombre}</MenuItem>
+                        ))}
+                    </Select>
                 </div>
 
                 <div className="flex flex-col gap-1">
                     <label className="text-sm font-semibold text-gray-800">
                         Calidad:
                     </label>
-                    <select
+                    <Select
                         value={calidad}
-                        onChange={(e) => setCalidad(e.target.value)}
-                        className="p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:outline-none"
+                        onChange={(e) => setCalidad(String(e.target.value))}
+                        sx={{
+                            height: "35px"
+                        }}
                         required
                     >
-                        <option value="">Seleccione una calidad</option>
-                        <option value="LVA">LVA</option>
-                        <option value="Versatyl">Versatyl</option>
-                        <option value="Permalatex">Permalatex</option>
-                        <option value="Super Corona">Super Corona</option>
-                    </select>
+                       {marcas?.map((item, index) => (
+                            <MenuItem key={index} value={item.id}>{item.nombre}</MenuItem>
+                        ))}
+                    </Select>
                 </div>
 
                 <div className="flex flex-col gap-1">
