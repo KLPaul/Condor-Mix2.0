@@ -3,7 +3,7 @@ import type { FormEvent } from 'react'
 
 export interface Person {
     name: string
-    email: string
+    cedula: string
 }
 
 interface FormPersonProps {
@@ -12,13 +12,13 @@ interface FormPersonProps {
 
 export default function FormPerson({ onSubmit }: FormPersonProps) {
     const [name, setName] = useState<string>('')
-    const [email, setEmail] = useState<string>('')
+    const [cedula, setCedula] = useState<string>('')
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
-        onSubmit({ name, email })
+        onSubmit({ name, cedula })
         setName('')
-        setEmail('')
+        setCedula('')
     }
 
     return (
@@ -56,13 +56,19 @@ export default function FormPerson({ onSubmit }: FormPersonProps) {
                     <input
                         type="text"
                         placeholder="Ingrese su nombre completo"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={cedula}
+                        onChange={(e) => setCedula(e.target.value)}
                         className="p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:outline-none"
                         required
                     />
                 </div>
 
+                <button
+                    type="submit"
+                    className="mt-2 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:outline-none transition-colors"
+                >
+                    Buscar o registrar persona
+                </button>
 
             </form>
         </div>

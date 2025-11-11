@@ -3,6 +3,8 @@ import FormPerson from './components/FormPerson'
 import FormColor from './components/FormColor'
 import type { Person } from './components/FormPerson'
 import type { Color } from './components/FormColor'
+import { Client } from './models/client'
+import { saveClient } from './services/SaveClient'
 
 function App() {
   const [activeTab, setActiveTab] = useState<'inicio' | 'busqueda'>('inicio')
@@ -12,6 +14,13 @@ function App() {
 
   const addPerson = (person: Person) => {
     setPeople([...people, person])
+    const client : Client = new Client()
+    client.cedula= person.cedula
+    client.nombre= person.name
+
+    console.log(client)
+    const response = saveClient(client)
+    console.log("response principal", response)
   }
 
   const addColor = (color: Color) => {
