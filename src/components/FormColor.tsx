@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react'
 import type { FormEvent } from 'react'
+import type { Bases } from '../models/bases'
+import type { Marcas } from '../models/marcas'
+import type { Tipo } from '../models/tipo'
+import { Recipiente } from '../models/recipiente'
 
 export interface Color {
     name: string
@@ -22,6 +26,43 @@ interface SearchResult {
 }
 
 export default function FormColor({ onSubmit }: FormColorProps) {
+
+    const [bases, setBases] = useState<Bases[]>([])
+    const [marcas , setMarcas] = useState<Marcas[]>([])
+    const [tipoTem , setipoTem] = useState<Tipo[]>([])
+    //en un futuro cambiar esta parte ya que no se si es recipiente o cantidad
+    const [recipiente , setRecipiente] = useState<Recipiente[]>([])
+
+    //temporal del useefect cargar datos pintura 
+    const basesList: Bases[] = [
+        { id: 1, nombre: "Base BP" },
+        { id: 2, nombre: "Base EP" },
+        { id: 2, nombre: "Base I" },
+        { id: 2, nombre: "Base UI" },
+    ];
+
+    const tipoList: Tipo[] = [
+        { id: 1, nombre: "Satinado" },
+        { id: 2, nombre: "Mate" },
+        { id: 2, nombre: "Elastomerico" },
+    ];
+
+    const marcaList: Tipo[] = [
+        { id: 1, nombre: "LVA" },
+        { id: 2, nombre: "Versatyl" },
+        { id: 2, nombre: "Permalatex" },
+        { id: 2, nombre: "Super Corona" },
+    ];
+    
+    useEffect(() => {
+
+        setBases
+
+
+
+
+    })
+
     const [name, setName] = useState<string>('')
     const [tipo, setTipo] = useState<string>('')
     const [base, setBase] = useState<string>('')
