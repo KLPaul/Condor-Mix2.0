@@ -5,6 +5,7 @@ import type { Person } from './components/FormPerson'
 import type { Color } from './components/FormColor'
 import { Client } from './models/client'
 import { saveClient } from './services/SaveClient'
+import CollapsibleTable from './components/Table'
 
 function App() {
   const [activeTab, setActiveTab] = useState<'inicio' | 'busqueda'>('inicio')
@@ -14,9 +15,9 @@ function App() {
 
   const addPerson = (person: Person) => {
     setPeople([...people, person])
-    const client : Client = new Client()
-    client.cedula= person.cedula
-    client.nombre= person.name
+    const client: Client = new Client()
+    client.cedula = person.cedula
+    client.nombre = person.name
 
     console.log(client)
     const response = saveClient(client)
@@ -55,11 +56,10 @@ function App() {
           <div className="flex items-center gap-10">
             <button
               onClick={() => handleTabChange('inicio')}
-              className={`relative text-lg font-medium transition-all duration-300 ${
-                activeTab === 'inicio'
+              className={`relative text-lg font-medium transition-all duration-300 ${activeTab === 'inicio'
                   ? 'text-black'
                   : 'text-gray-600 hover:text-black'
-              }`}
+                }`}
             >
               Inicio
               {activeTab === 'inicio' && (
@@ -69,11 +69,10 @@ function App() {
 
             <button
               onClick={() => handleTabChange('busqueda')}
-              className={`relative text-lg font-medium transition-all duration-300 ${
-                activeTab === 'busqueda'
+              className={`relative text-lg font-medium transition-all duration-300 ${activeTab === 'busqueda'
                   ? 'text-black'
                   : 'text-gray-600 hover:text-black'
-              }`}
+                }`}
             >
               Búsqueda
               {activeTab === 'busqueda' && (
@@ -85,21 +84,35 @@ function App() {
 
         {/* Contenido dinámico con efecto */}
         <div
-          className={`transition-all duration-500 ease-in-out transform ${
-            fade ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
-          }`}
+          className={`transition-all duration-500 ease-in-out transform ${fade ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
+            }`}
         >
           {activeTab === 'inicio' ? (
-            <div className="space-y-15
-            "> 
-              <FormPerson onSubmit={addPerson} />
-              <FormColor onSubmit={addColor} />
+            <div className="flex flex-col lg:flex-row gap-10">
+              {/* Columna izquierda: formularios */}
+              <div className="flex flex-col gap-6 w-full lg:w-1/2">
+                <div className="bg-white shadow-md rounded-xl p-6 border border-gray-200">
+                  <h2 className="text-xl font-semibold text-gray-800 mb-4">Datos de la Persona</h2>
+                  <FormPerson onSubmit={addPerson} />
+                </div>
+
+                <div className="bg-white shadow-md rounded-xl p-6 border border-gray-200">
+                  <h2 className="text-xl font-semibold text-gray-800 mb-4">Agregar Color</h2>
+                  <FormColor onSubmit={addColor} />
+                </div>
+              </div>
+
+              {/* Columna derecha: tabla */}
+              <div className="w-full lg:w-1/2">
+                <CollapsibleTable />
+              </div>
             </div>
           ) : (
             <div className="text-center text-gray-700 text-lg mt-20">
               Aquí irá el módulo de búsqueda 🔍
             </div>
           )}
+
         </div>
       </div>
     </div>

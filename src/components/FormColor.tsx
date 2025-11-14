@@ -3,16 +3,16 @@ import type { FormEvent } from 'react'
 import type { Bases } from '../models/bases'
 import { Marcas } from '../models/marcas'
 import type { Tipo } from '../models/tipo'
-import { Recipiente } from '../models/recipiente'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
+import type { Cantidad } from '../models/cantidad'
 
 export interface Color {
     name: string
     tipo: string
     base: string
     calidad: string
-    cantidad: number
+    cantidad: string
 }
 
 interface FormColorProps {
@@ -32,8 +32,7 @@ export default function FormColor({ onSubmit }: FormColorProps) {
     const [bases, setBases] = useState<Bases[]>([])
     const [marcas, setMarcas] = useState<Marcas[]>([])
     const [tipoTem, setipoTem] = useState<Tipo[]>([])
-    //en un futuro cambiar esta parte ya que no se si es recipiente o cantidad
-    const [recipiente, setRecipiente] = useState<Recipiente[]>([])
+    const [canti, setCanti] = useState<Cantidad[]>([])
 
     //temporal del useefect cargar datos pintura 
     const basesList: Bases[] = [
@@ -56,23 +55,31 @@ export default function FormColor({ onSubmit }: FormColorProps) {
         { id: 2, nombre: "Super Corona" },
     ];
 
+    const cantiList: Cantidad[] = [
+        { id: 1, nombre: "1 L" },
+        { id: 2, nombre: "1 G" },
+        { id: 3, nombre: "5 G" },
+    ];
+
     useEffect(() => {
 
         setBases(basesList)
         setipoTem(tipoList)
         setMarcas(marcaList)
+        setCanti(cantiList)
 
         setTipo(tipoList[0].id.toString())
         setCalidad(marcaList[0].id.toString())
         setBase(basesList[0].id.toString())
+        setCanti(cantiList)
 
-    },[])
+    }, [])
 
     const [name, setName] = useState<string>('')
     const [tipo, setTipo] = useState<string>('')
     const [base, setBase] = useState<string>('')
     const [calidad, setCalidad] = useState<string>('')
-    const [cantidad, setCantidad] = useState<number>(0)
+    const [cantidad, setCantidad] = useState<string>('')
     const [searchResults, setSearchResults] = useState<SearchResult[]>([])
     const [isSearching, setIsSearching] = useState<boolean>(false)
 
@@ -119,7 +126,7 @@ export default function FormColor({ onSubmit }: FormColorProps) {
         setTipo('')
         setBase('')
         setCalidad('')
-        setCantidad(0)
+        setCantidad('')
         setSearchResults([])
     }
 
@@ -143,7 +150,7 @@ export default function FormColor({ onSubmit }: FormColorProps) {
     return (
         <div className="bg-white border border-red-600 rounded-xl shadow-md flex w-full max-w-2xl overflow-hidden">
             {/* Franja lateral roja */}
-            <div className="bg-red-600 w-20 rounded-r-[2rem]"></div>
+            <div className="bg-red-600 w-2 rounded-r-[2rem]"></div>
 
             {/* Contenido del formulario */}
             <form
@@ -260,7 +267,7 @@ export default function FormColor({ onSubmit }: FormColorProps) {
                         }}
                         required
                     >
-                       {marcas?.map((item, index) => (
+                        {marcas?.map((item, index) => (
                             <MenuItem key={index} value={item.id}>{item.nombre}</MenuItem>
                         ))}
                     </Select>
@@ -270,26 +277,20 @@ export default function FormColor({ onSubmit }: FormColorProps) {
                     <label className="text-sm font-semibold text-gray-800">
                         Cantidad:
                     </label>
-                    <div className="flex gap-4">
-                        {[
-                            { value: 1, unit: 'L' },
-                            { value: 1, unit: 'G' },
-                            { value: 5, unit: 'G' }
-                        ].map((option) => (
-                            <label key={`${option.value}${option.unit}`} className="flex items-center gap-2">
-                                <input
-                                    type="radio"
-                                    name="cantidad"
-                                    value={option.value}
-                                    checked={cantidad === option.value}
-                                    onChange={(e) => setCantidad(Number(e.target.value))}
-                                    className="text-red-600 focus:ring-red-500"
-                                    required
-                                />
-                                <span>{option.value}{option.unit}</span>
-                            </label>
+                    <Select
+                        value={cantidad}
+                        onChange={(e) => setCantidad(String(e.target.value))}
+                        sx={{
+                            height: "35px"
+                        }}
+                        required
+                    >
+                        {canti?.map((item) => (
+                            <MenuItem key={item.id} value={item.id}>
+                                {item.nombre}
+                            </MenuItem>
                         ))}
-                    </div>
+                    </Select>
                 </div>
 
                 <button

@@ -24,7 +24,7 @@ export default function FormPerson({ onSubmit }: FormPersonProps) {
     return (
         <div className="bg-white border border-red-600 rounded-xl shadow-md flex w-full max-w-2xl overflow-hidden">
             {/* Franja lateral roja */}
-            <div className="bg-red-600 w-20 rounded-r-[2rem]"></div>
+            <div className="bg-red-600 w-2 rounded-r-[2rem]"></div>
 
             {/* Contenido del formulario */}
             <form
