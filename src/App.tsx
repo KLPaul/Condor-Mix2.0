@@ -3,8 +3,8 @@ import FormPerson from './components/FormPerson'
 import FormColor, { type Color } from './components/FormColor'
 import type { Person } from './components/FormPerson'
 import CollapsibleTable from './components/Table'
-import { api, ApiService } from './services/ApiService'
-import type { Colores } from './models/colores'
+import { api } from './services/ApiService'
+import { Colores } from './models/colores'
 
 function App() {
   const [activeTab, setActiveTab] = useState<'inicio' | 'busqueda'>('inicio')
@@ -13,12 +13,12 @@ function App() {
 
   //service persona 
   const addPerson = (person: Person) => {
-    
+
     switch (person.option) {
       case "registrar":
         console.log("registrar")
         break;
-    
+
       case "buscar":
         console.log("buscar")
         break;
@@ -29,15 +29,22 @@ function App() {
   }
 
   const addColor = (color: Color) => {
- 
+
     const allData = Object.values(color).every(value => value.trim() !== "")
-
+    var data: any
     if (allData) {
-        console.log(color)
-      console.log(api.post("/api/color/register",color))
+      const col = new Colores()
+      col.codigo=color.code
+      col.name=color.name
+      col.idBase=parseInt(color.base)
+      col.idCantidad = parseInt(color.cantidad)
+      col.idMarca = parseInt(color.calidad)
+      col.idTipo = parseInt(color.tipo)
 
+      api.post("/api/color/register", col)
+      console.log("")
     }
-   
+
   }
 
 
@@ -69,8 +76,8 @@ function App() {
             <button
               onClick={() => handleTabChange('inicio')}
               className={`relative text-lg font-medium transition-all duration-300 ${activeTab === 'inicio'
-                  ? 'text-black'
-                  : 'text-gray-600 hover:text-black'
+                ? 'text-black'
+                : 'text-gray-600 hover:text-black'
                 }`}
             >
               Inicio
@@ -82,8 +89,8 @@ function App() {
             <button
               onClick={() => handleTabChange('busqueda')}
               className={`relative text-lg font-medium transition-all duration-300 ${activeTab === 'busqueda'
-                  ? 'text-black'
-                  : 'text-gray-600 hover:text-black'
+                ? 'text-black'
+                : 'text-gray-600 hover:text-black'
                 }`}
             >
               Búsqueda

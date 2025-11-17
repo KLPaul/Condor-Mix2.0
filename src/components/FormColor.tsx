@@ -16,6 +16,7 @@ interface FormColorProps {
 
 export interface Color {
     name: string
+    code: string
     tipo: string
     base: string
     calidad: string
@@ -127,7 +128,7 @@ export default function FormColor({ onSubmit }: FormColorProps) {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
-        onSubmit({ name, tipo, base, calidad, cantidad })
+        onSubmit({ name, code, tipo, base, calidad, cantidad })
         setName('')
         setCode('')
         setTipo('1')
