@@ -1,31 +1,43 @@
 import { useState, useEffect } from 'react'
 import FormPerson from './components/FormPerson'
-import FormColor from './components/FormColor'
+import FormColor, { type Color } from './components/FormColor'
 import type { Person } from './components/FormPerson'
-import type { Color } from './components/FormColor'
-import { Client } from './models/client'
-import { saveClient } from './services/SaveClient'
 import CollapsibleTable from './components/Table'
+import { api, ApiService } from './services/ApiService'
+import type { Colores } from './models/colores'
 
 function App() {
   const [activeTab, setActiveTab] = useState<'inicio' | 'busqueda'>('inicio')
-  const [people, setPeople] = useState<Person[]>([])
-  const [colors, setColors] = useState<Color[]>([])
+
   const [fade, setFade] = useState(true)
 
+  //service persona 
   const addPerson = (person: Person) => {
-    setPeople([...people, person])
-    const client: Client = new Client()
-    client.cedula = person.cedula
-    client.nombre = person.name
+    
+    switch (person.option) {
+      case "registrar":
+        console.log("registrar")
+        break;
+    
+      case "buscar":
+        console.log("buscar")
+        break;
 
-    console.log(client)
-    const response = saveClient(client)
-    console.log("response principal", response)
+      default:
+        break;
+    }
   }
 
   const addColor = (color: Color) => {
-    setColors([...colors, color])
+ 
+    const allData = Object.values(color).every(value => value.trim() !== "")
+
+    if (allData) {
+        console.log(color)
+      console.log(api.post("/api/color/register",color))
+
+    }
+   
   }
 
 

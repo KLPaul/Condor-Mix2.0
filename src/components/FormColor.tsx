@@ -6,6 +6,13 @@ import type { Tipo } from '../models/tipo'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import type { Cantidad } from '../models/cantidad'
+import { FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material'
+import type { Colores } from '../models/colores'
+
+
+interface FormColorProps {
+    onSubmit: (color: Color) => void
+}
 
 export interface Color {
     name: string
@@ -13,10 +20,6 @@ export interface Color {
     base: string
     calidad: string
     cantidad: string
-}
-
-interface FormColorProps {
-    onSubmit: (color: Color) => void
 }
 
 interface SearchResult {
@@ -31,8 +34,8 @@ export default function FormColor({ onSubmit }: FormColorProps) {
 
     const [bases, setBases] = useState<Bases[]>([])
     const [marcas, setMarcas] = useState<Marcas[]>([])
-    const [tipoTem, setipoTem] = useState<Tipo[]>([])
-    const [canti, setCanti] = useState<Cantidad[]>([])
+    const [tipoTem, setiposTem] = useState<Tipo[]>([])
+    const [cantidades, setCantidades] = useState<Cantidad[]>([])
 
     //temporal del useefect cargar datos pintura 
     const basesList: Bases[] = [
@@ -45,14 +48,14 @@ export default function FormColor({ onSubmit }: FormColorProps) {
     const tipoList: Tipo[] = [
         { id: 1, nombre: "Satinado" },
         { id: 2, nombre: "Mate" },
-        { id: 2, nombre: "Elastomerico" },
+        { id: 3, nombre: "Elastomerico" },
     ];
 
     const marcaList: Tipo[] = [
         { id: 1, nombre: "LVA" },
         { id: 2, nombre: "Versatyl" },
-        { id: 2, nombre: "Permalatex" },
-        { id: 2, nombre: "Super Corona" },
+        { id: 3, nombre: "Permalatex" },
+        { id: 4, nombre: "Super Corona" },
     ];
 
     const cantiList: Cantidad[] = [
@@ -61,21 +64,23 @@ export default function FormColor({ onSubmit }: FormColorProps) {
         { id: 3, nombre: "5 G" },
     ];
 
+
     useEffect(() => {
 
         setBases(basesList)
-        setipoTem(tipoList)
+        setiposTem(tipoList)
         setMarcas(marcaList)
-        setCanti(cantiList)
+        setCantidades(cantiList)
 
         setTipo(tipoList[0].id.toString())
         setCalidad(marcaList[0].id.toString())
         setBase(basesList[0].id.toString())
-        setCanti(cantiList)
+        setCantidad(cantiList[0].id.toString())
 
     }, [])
 
     const [name, setName] = useState<string>('')
+    const [code, setCode] = useState<string>('')
     const [tipo, setTipo] = useState<string>('')
     const [base, setBase] = useState<string>('')
     const [calidad, setCalidad] = useState<string>('')
@@ -102,6 +107,7 @@ export default function FormColor({ onSubmit }: FormColorProps) {
                     // Ajusta esta línea según la estructura real de la API
                     const results = data.results || data.colors || data.data || []
                     setSearchResults(results)
+                
                 } else {
                     console.error('Error en la búsqueda:', response.status)
                     setSearchResults([])
@@ -123,15 +129,18 @@ export default function FormColor({ onSubmit }: FormColorProps) {
         e.preventDefault()
         onSubmit({ name, tipo, base, calidad, cantidad })
         setName('')
-        setTipo('')
-        setBase('')
-        setCalidad('')
-        setCantidad('')
+        setCode('')
+        setTipo('1')
+        setBase('1')
+        setCalidad('1')
+        setCantidad('1')
         setSearchResults([])
     }
 
     const handleResultClick = (result: SearchResult) => {
+        // 012 agregar aqui para recuperar los 2 elementos nombre 
         setName(result.name)
+        setCode(result.colorNumber?.toString() || "")
         setSearchResults([])
     }
 
@@ -175,7 +184,7 @@ export default function FormColor({ onSubmit }: FormColorProps) {
                     />
 
                     {/* Resultados de búsqueda */}
-                    {searchResults.length > 0 && (
+                    {searchResults.length > 0 && code.trim() === ""  && (
                         <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-lg mt-1 max-h-60 overflow-y-auto z-10">
                             {searchResults.map((result) => (
                                 <div
@@ -206,7 +215,7 @@ export default function FormColor({ onSubmit }: FormColorProps) {
                     )}
 
                     {/* Loading indicator */}
-                    {isSearching && (
+                    {isSearching && code.trim() === "" && (
                         <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-lg mt-1 p-3">
                             <div className="text-gray-600 text-sm">Buscando colores...</div>
                         </div>
@@ -274,23 +283,25 @@ export default function FormColor({ onSubmit }: FormColorProps) {
                 </div>
 
                 <div className="flex flex-col gap-1">
-                    <label className="text-sm font-semibold text-gray-800">
-                        Cantidad:
-                    </label>
-                    <Select
-                        value={cantidad}
-                        onChange={(e) => setCantidad(String(e.target.value))}
-                        sx={{
-                            height: "35px"
-                        }}
-                        required
-                    >
-                        {canti?.map((item) => (
-                            <MenuItem key={item.id} value={item.id}>
-                                {item.nombre}
-                            </MenuItem>
-                        ))}
-                    </Select>
+
+                    <FormControl>
+                        <label className="text-sm font-semibold text-gray-800">
+                            Cantidad:
+                        </label>
+                        <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                            value={cantidad}
+                            onChange={(e)=> setCantidad(String(e.target.value))}
+                        >   
+                            {cantidades?.map((item) =>(
+                                <FormControlLabel value={item.id} key={item.id} control={<Radio />} label={item.nombre}/>
+                            ))}
+
+                            
+                        </RadioGroup>
+                    </FormControl>
                 </div>
 
                 <button
