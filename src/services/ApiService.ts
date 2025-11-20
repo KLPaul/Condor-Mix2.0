@@ -10,4 +10,6 @@ export class ApiService{
     }
 
 }
+
+// 013 ver si se agregar un interceptor de errores general para despues
 export const api = new ApiService();

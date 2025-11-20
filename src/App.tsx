@@ -5,6 +5,7 @@ import type { Person } from './components/FormPerson'
 import CollapsibleTable from './components/Table'
 import { api } from './services/ApiService'
 import { Colores } from './models/colores'
+import { Client } from './models/client'
 
 function App() {
   const [activeTab, setActiveTab] = useState<'inicio' | 'busqueda'>('inicio')
@@ -12,14 +13,22 @@ function App() {
   const [fade, setFade] = useState(true)
 
   //service persona 
-  const addPerson = (person: Person) => {
+  const addPerson = async (person: Person) => {
 
     switch (person.option) {
       case "registrar":
-        console.log("registrar")
+        // 013 revisar la data para registrar al usuario es decir si guardar cedula y nombre o solo alguno de los 2
+        const p = new Client()
+        p.cedula = person.cedula
+        p.nombre = person.name
+        const response = await api.post("/api/personas/register", p)
+        console.log(response)
         break;
 
       case "buscar":
+        const p2 = new Client()
+        p2.nombre=person.name
+        console.log(p2.nombre)
         console.log("buscar")
         break;
 
@@ -34,15 +43,17 @@ function App() {
     var data: any
     if (allData) {
       const col = new Colores()
-      col.codigo=color.code
-      col.name=color.name
-      col.idBase=parseInt(color.base)
+      col.codigo = color.code
+      col.name = color.name
+      col.idBase = parseInt(color.base)
       col.idCantidad = parseInt(color.cantidad)
       col.idMarca = parseInt(color.calidad)
       col.idTipo = parseInt(color.tipo)
 
-      api.post("/api/color/register", col)
-      console.log("")
+      api.post("/api/color/register", col).then(data => {
+
+      })
+
     }
 
   }
