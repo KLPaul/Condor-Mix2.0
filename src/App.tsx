@@ -21,7 +21,7 @@ function App() {
         const p = new Client()
         p.cedula = person.cedula
         p.nombre = person.name
-        const response = await api.post("/api/personas/register", p)
+        const response = await api.post("api/personas/register", p)
         console.log(response)
         break;
 

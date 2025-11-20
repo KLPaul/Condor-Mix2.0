@@ -1,6 +1,8 @@
 import { Autocomplete, FormControl, FormControlLabel, Radio, RadioGroup, TextField } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
+import type { Client } from '../models/client'
+import { api, ApiService } from '../services/ApiService'
 
 export interface Person {
     name: string
@@ -143,7 +145,8 @@ export default function FormPerson({ onSubmit }: FormPersonProps) {
     const [name, setName] = useState<string>('')
     const [cedula, setCedula] = useState<string>('')
     const [option, setOption] = useState<string>('registrar')
-    const [search, setSearch] = useState<string>('')
+    const [param, setParam] = useState<string>('')
+    const [clients, setClient] = useState<Client[]>([])
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
@@ -151,6 +154,21 @@ export default function FormPerson({ onSubmit }: FormPersonProps) {
         setName('')
         setCedula('')
     }
+
+    useEffect(()=>{
+        const fetchData = async () => {
+            if (param.length > 1) {
+                try {
+                    const response = await api.getSearchParam("api/personas/search?param=", param)
+                    console.log(response)
+                } catch (error) {
+                    console.error(error)
+                }
+            }
+        }
+    
+       
+    },[param])
 
     return (
         <div className="bg-white border border-red-600 rounded-xl shadow-md flex w-full max-w-2xl overflow-hidden">
@@ -225,7 +243,7 @@ export default function FormPerson({ onSubmit }: FormPersonProps) {
                         }}
                         onInputChange={(event, newInputValue, reason) => {
                             if (reason === "input") {   
-                              setSearch(newInputValue);
+                              setParam(newInputValue);
                             }
                           }}
                         options={top100Films}
