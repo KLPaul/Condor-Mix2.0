@@ -9,6 +9,7 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
+import { Client } from '../models/client'
 
 function createData(
     idcolor: string,
@@ -29,6 +30,9 @@ function createData(
             },
         ],
     }
+}
+interface Props{
+    client?:Client
 }
 
 function Row(props: { row: ReturnType<typeof createData> }) {
@@ -81,9 +85,10 @@ const rows = [
     createData('EZ 9077', 'Mate', 'Base EB', 'LVA', '1 G'),
 ]
 
-export default function CollapsibleTable() {
-    return (
-        <div className="bg-white border border-red-600 rounded-xl shadow-md flex w-full max-w-5xl overflow-hidden">
+export default function CollapsibleTable({client}:Props) {
+   
+    return (   client?.id !== 0 && client !== undefined && 
+       ( <div className="bg-white border border-red-600 rounded-xl shadow-md flex w-full max-w-5xl overflow-hidden">
             {/* Franja lateral roja */}
             <div className="bg-red-600 w-2 rounded-r-[2rem]"></div>
 
@@ -101,7 +106,7 @@ export default function CollapsibleTable() {
                             <TableRow className="bg-red-600">
                                 <TableCell colSpan={6}>
                                     <span className="text-white font-semibold">
-                                        0150266385
+                                       {client?.cedula +" "+ client?.nombre}
                                     </span>
                                 </TableCell>
                             </TableRow>
@@ -133,6 +138,6 @@ export default function CollapsibleTable() {
                     </Table>
                 </TableContainer>
             </div>
-        </div>
+        </div>)
     )
 }

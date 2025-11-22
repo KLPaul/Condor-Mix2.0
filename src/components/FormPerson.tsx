@@ -1,7 +1,7 @@
 import { Autocomplete, FormControl, FormControlLabel, Radio, RadioGroup, TextField } from '@mui/material'
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
-import type { Client } from '../models/client'
+import { Client } from '../models/client'
 import { api, ApiService } from '../services/ApiService'
 
 export interface Person {
@@ -12,20 +12,18 @@ export interface Person {
 
 interface FormPersonProps {
     onSubmit: (person: Person) => void
+
+    sendPerson: (client: Client) => void
 }
 
-const top100Films = [
-    { label: 'The Shawshank Redemption', year: 1994 },
 
-];
-
-export default function FormPerson({ onSubmit }: FormPersonProps) {
+export default function FormPerson({ onSubmit, sendPerson }: FormPersonProps) {
     const [name, setName] = useState<string>('')
     const [cedula, setCedula] = useState<string>('')
     const [option, setOption] = useState<string>('registrar')
     const [param, setParam] = useState<string>('')
     const [clients, setClients] = useState<Client[]>([])
-    const [clientSelect,setClientSelect] = useState<Client>()
+    const [isSearch, setIsSearch] = useState<boolean>(true)
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
@@ -34,27 +32,28 @@ export default function FormPerson({ onSubmit }: FormPersonProps) {
         setCedula('')
     }
 
-    useEffect(()=>{
+    useEffect(() => {
+
         const searchClient = async () => {
-            if (param.length > 1) {
+            if (param.length > 2) {
                 try {
                     const response = await api.getSearchParam("api/personas/search?param=", param)
                     setClients(response as Client[])
-                    console.log(response)
+
+                    if (clients.length === 0) setIsSearch(false)
                 } catch (error) {
                     console.error(error)
                     alert("error backEnd")
                 }
+            } else {
+                setIsSearch(true)
             }
         }
-    
-        const timeApiCall = setTimeout(searchClient,400)
+
+        const timeApiCall = setTimeout(searchClient, 400)
         return () => clearTimeout(timeApiCall)
-       
-    },[param])
-    useEffect(()=>{
-        console.log(clientSelect)
-    },[clientSelect])
+
+    }, [param])
 
     return (
         <div className="bg-white border border-red-600 rounded-xl shadow-md flex w-full max-w-2xl overflow-hidden">
@@ -123,19 +122,24 @@ export default function FormPerson({ onSubmit }: FormPersonProps) {
                 {option === "buscar" && (
                     <Autocomplete
                         getOptionLabel={(object => `${object.nombre} ${object.cedula}`)}
-                        onChange={(_event, value)=>{
-                            if(value){
-                                setClientSelect(value)
+                        onChange={(_event, value) => {
+                            if (value) {
+                              
+                                sendPerson(value)
+
+                            }else{
+                                sendPerson(new Client())
+                          
                             }
-                            
+
                         }}
                         onInputChange={(event, newInputValue, reason) => {
-                            if (reason === "input") {   
-                              setParam(newInputValue);
+                            if (reason === "input") {
+                                setParam(newInputValue);
                             }
-                          }}
+                        }}
                         options={clients}
-                        noOptionsText="Buscando"
+                        noOptionsText={isSearch ? "Buscando" : "Sin resultados"}
                         sx={{ width: '75%' }}
                         renderInput={(params) => <TextField {...params} label="Nombre o cédula" />}
                     />

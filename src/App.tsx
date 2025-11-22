@@ -11,8 +11,9 @@ function App() {
   const [activeTab, setActiveTab] = useState<'inicio' | 'busqueda'>('inicio')
 
   const [fade, setFade] = useState(true)
+  const [client, setClient] = useState<Client>()
 
-  //service persona 
+  //service persona   
   const addPerson = async (person: Person) => {
 
     switch (person.option) {
@@ -25,16 +26,13 @@ function App() {
         console.log(response)
         break;
 
-      case "buscar":
-        const p2 = new Client()
-        p2.nombre=person.name
-        console.log(p2.nombre)
-        console.log("buscar")
-        break;
-
       default:
         break;
     }
+  }
+
+  const procesClient = (client:Client) => {
+    setClient(client)
   }
 
   const addColor = (color: Color) => {
@@ -123,7 +121,7 @@ function App() {
               <div className="flex flex-col gap-6 w-full lg:w-1/2">
                 <div className="bg-white shadow-md rounded-xl p-6 border border-gray-200">
                   <h2 className="text-xl font-semibold text-gray-800 mb-4">Datos de la Persona</h2>
-                  <FormPerson onSubmit={addPerson} />
+                  <FormPerson onSubmit={addPerson} sendPerson={procesClient} />
                 </div>
 
                 <div className="bg-white shadow-md rounded-xl p-6 border border-gray-200">
@@ -134,7 +132,7 @@ function App() {
 
               {/* Columna derecha: tabla */}
               <div className="w-full lg:w-1/2">
-                <CollapsibleTable />
+                <CollapsibleTable client={client} />
               </div>
             </div>
           ) : (

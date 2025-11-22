@@ -7,12 +7,14 @@ import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import type { Cantidad } from '../models/cantidad'
 import { FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material'
-import type { Colores } from '../models/colores'
 
 
 interface FormColorProps {
     onSubmit: (color: Color) => void
+
 }
+
+
 
 export interface Color {
     name: string
@@ -31,7 +33,7 @@ interface SearchResult {
     // Agrega más propiedades según la respuesta de la API
 }
 
-export default function FormColor({ onSubmit }: FormColorProps) {
+export default function FormColor({ onSubmit}: FormColorProps) {
 
     const [bases, setBases] = useState<Bases[]>([])
     const [marcas, setMarcas] = useState<Marcas[]>([])
