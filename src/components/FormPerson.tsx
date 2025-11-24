@@ -117,19 +117,27 @@ export default function FormPerson({ onSubmit, sendPerson }: FormPersonProps) {
                             onChange={(e) => setCedula(e.target.value)}
                             className="p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:outline-none"
                             required={option === "registrar"} />
-                    </div></>
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="mt-2 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:outline-none transition-colors"
+                    >
+                        Aceptar
+                    </button>
+                </>
                 )}
                 {option === "buscar" && (
                     <Autocomplete
                         getOptionLabel={(object => `${object.nombre} ${object.cedula}`)}
                         onChange={(_event, value) => {
                             if (value) {
-                              
+
                                 sendPerson(value)
 
-                            }else{
+                            } else {
                                 sendPerson(new Client())
-                          
+
                             }
 
                         }}
@@ -146,12 +154,7 @@ export default function FormPerson({ onSubmit, sendPerson }: FormPersonProps) {
                 )}
 
 
-                <button
-                    type="submit"
-                    className="mt-2 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:outline-none transition-colors"
-                >
-                    Aceptar
-                </button>
+
 
             </form>
         </div>

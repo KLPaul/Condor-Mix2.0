@@ -10,6 +10,8 @@ import Paper from '@mui/material/Paper'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import { Client } from '../models/client'
+import { useEffect } from 'react'
+import { api } from '../services/ApiService'
 
 function createData(
     idcolor: string,
@@ -87,6 +89,20 @@ const rows = [
 
 export default function CollapsibleTable({client}:Props) {
    
+
+
+    useEffect(()=>{
+        
+        if (client?.id !== 0 && client !== undefined) {
+            const addColors = async () => {
+                const response = await api.getSearchPathVariable("api/percolor/getColors/", client!.id)
+                console.log(response)
+            }
+            addColors()
+        }
+
+    },[client])
+
     return (   client?.id !== 0 && client !== undefined && 
        ( <div className="bg-white border border-red-600 rounded-xl shadow-md flex w-full max-w-5xl overflow-hidden">
             {/* Franja lateral roja */}

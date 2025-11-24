@@ -14,6 +14,16 @@ export class ApiService{
 
         return response.data
     }
+
+
+    async getSearchPathVariable<T>(url : String , param:number) : Promise<T>{
+        const response = await axios.get<T>(env.urlApi+url+`${param}`)
+
+        return response.data
+    }
+
+    
+
 }
 
 // 013 ver si se agregar un interceptor de errores general para despues
