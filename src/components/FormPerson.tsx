@@ -2,7 +2,7 @@ import { Autocomplete, FormControl, FormControlLabel, Radio, RadioGroup, TextFie
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Client } from '../models/client'
-import { api, ApiService } from '../services/ApiService'
+import { api } from '../services/ApiService'
 
 export interface Person {
     name: string
@@ -37,8 +37,8 @@ export default function FormPerson({ onSubmit, sendPerson }: FormPersonProps) {
         const searchClient = async () => {
             if (param.length > 2) {
                 try {
-                    const response = await api.getSearchParam("api/personas/search?param=", param)
-                    setClients(response as Client[])
+                    const response = await api.getSearchParam<Client[]>("api/personas/search?param=", param)
+                    setClients(response)
 
                     if (clients.length === 0) setIsSearch(false)
                 } catch (error) {
@@ -101,8 +101,8 @@ export default function FormPerson({ onSubmit, sendPerson }: FormPersonProps) {
                         <input
                             type="text"
                             placeholder="Ingrese su cédula"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            value={cedula}
+                            onChange={(e) => setCedula(e.target.value)}
                             className="p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:outline-none"
                             required={option === "registrar"} />
                     </div>
@@ -113,8 +113,8 @@ export default function FormPerson({ onSubmit, sendPerson }: FormPersonProps) {
                         <input
                             type="text"
                             placeholder="Ingrese su nombre completo"
-                            value={cedula}
-                            onChange={(e) => setCedula(e.target.value)}
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                             className="p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:outline-none"
                             required={option === "registrar"} />
                     </div>

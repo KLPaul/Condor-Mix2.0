@@ -10,34 +10,17 @@ import Paper from '@mui/material/Paper'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import { Client } from '../models/client'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { api } from '../services/ApiService'
+import type { ColorList } from '../models/colorList'
 
-function createData(
-    idcolor: string,
-    tipo: string,
-    base: string,
-    calidad: string,
-    cantidad: string
-) {
-    return {
-        idcolor,
-        tipo,
-        base,
-        calidad,
-        cantidad,
-        history: [
-            {
-                date: '2020-01-05',
-            },
-        ],
-    }
-}
+
 interface Props{
     client?:Client
 }
 
-function Row(props: { row: ReturnType<typeof createData> }) {
+
+function Row(props: { row:ColorList}) {
     const { row } = props
     const [open, setOpen] = React.useState(false)
 
@@ -49,30 +32,18 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                     '&:hover': { backgroundColor: '#fff5f5' }, // suave fondo rojo claro
                 }}
             >
-                <TableCell>
-                    <IconButton
-                        aria-label="expand row"
-                        size="small"
-                        onClick={() => setOpen(!open)}
-                    >
-                        {open ? (
-                            <KeyboardArrowUpIcon className="text-red-600" />
-                        ) : (
-                            <KeyboardArrowDownIcon className="text-red-600" />
-                        )}
-                    </IconButton>
-                </TableCell>
+            
                 <TableCell component="th" scope="row" className="font-semibold text-gray-800">
-                    {row.idcolor}
+                    {row.colorCod+" "+row.colorName}
                 </TableCell>
                 <TableCell align="right" className="text-gray-700">
                     {row.tipo}
                 </TableCell>
                 <TableCell align="right" className="text-gray-700">
-                    {row.base}
+                    {row.baseName}
                 </TableCell>
                 <TableCell align="right" className="text-gray-700">
-                    {row.calidad}
+                    {row.marca}
                 </TableCell>
                 <TableCell align="right" className="text-gray-700">
                     {row.cantidad}
@@ -82,21 +53,19 @@ function Row(props: { row: ReturnType<typeof createData> }) {
     )
 }
 
-const rows = [
-    createData('EZ 9057', 'Satinado', 'Base BP', 'Permalatex', '1 L'),
-    createData('EZ 9077', 'Mate', 'Base EB', 'LVA', '1 G'),
-]
+
 
 export default function CollapsibleTable({client}:Props) {
    
+       const [listColor, setListColor] = useState<ColorList[]>([])
 
 
     useEffect(()=>{
         
         if (client?.id !== 0 && client !== undefined) {
             const addColors = async () => {
-                const response = await api.getSearchPathVariable("api/percolor/getColors/", client!.id)
-                console.log(response)
+                const response = await api.getSearchPathVariable<ColorList[]>("api/percolor/getColors/", client!.id)
+                setListColor(response)
             }
             addColors()
         }
@@ -128,7 +97,7 @@ export default function CollapsibleTable({client}:Props) {
                             </TableRow>
 
                             <TableRow className="bg-red-50">
-                                <TableCell />
+                               
                                 <TableCell className="font-semibold text-gray-800">
                                     COD.COLOR
                                 </TableCell>
@@ -147,8 +116,8 @@ export default function CollapsibleTable({client}:Props) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row) => (
-                                <Row key={row.idcolor} row={row} />
+                            {listColor.map((row) => (
+                                <Row key={row.colorCod} row={row} />
                             ))}
                         </TableBody>
                     </Table>
