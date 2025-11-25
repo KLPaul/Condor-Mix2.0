@@ -1,27 +1,25 @@
-import axios from "axios"
-import { env } from "../env/entorno"
+import { axiosInstance } from "../env/axiosConfig"
 
 export class ApiService{
 
-    async post<T>(url : String , t: any) : Promise<T>{
+    async post<T>(url : string , t: any) : Promise<T>{
      
-        const response = await axios.post<T>(env.urlApi+url,t)
+        const response = await axiosInstance.post<T>(url,t)
         return response.data
     }
 
-    async getSearchParam<T>(url : String , param:any) : Promise<T>{
-        const response = await axios.get<T>(env.urlApi+url+`${param}`)
-
-        return response.data
-    }
-
-
-    async getSearchPathVariable<T>(url : String , param:number) : Promise<T>{
-        const response = await axios.get<T>(env.urlApi+url+`${param}`)
+    async getSearchParam<T>(url : string , param:any) : Promise<T>{
+        const response = await axiosInstance.get<T>(url+`${param}`)
 
         return response.data
     }
 
+
+    async getSearchPathVariable<T>(url : string , param:number) : Promise<T>{
+        const response = await axiosInstance.get<T>(url+`${param}`)
+
+        return response.data
+    }
     
 
 }
