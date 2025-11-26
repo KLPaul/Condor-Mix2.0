@@ -147,18 +147,7 @@ export default function FormColor({ onSubmit}: FormColorProps) {
         setSearchResults([])
     }
 
-    // Función para mostrar la información del resultado
-    const getResultDisplayText = (result: SearchResult) => {
-        let displayText = result.name
-        if (result.brandKey) {
-            displayText += ` | Brand: ${result.brandKey}`
-        }
-        if (result.colorNumber) {
-            displayText += ` | Código: ${result.colorNumber}`
-        }
-        return displayText
-    }
-
+   
     return (
         <div className="bg-white border border-red-600 rounded-xl shadow-md flex w-full max-w-2xl overflow-hidden">
             {/* Franja lateral roja */}

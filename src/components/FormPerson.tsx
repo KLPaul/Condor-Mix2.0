@@ -141,7 +141,7 @@ export default function FormPerson({ onSubmit, sendPerson }: FormPersonProps) {
                             }
 
                         }}
-                        onInputChange={(event, newInputValue, reason) => {
+                        onInputChange={(_event, newInputValue, reason) => {
                             if (reason === "input") {
                                 setParam(newInputValue);
                             }

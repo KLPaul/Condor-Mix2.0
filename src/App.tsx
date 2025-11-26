@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import FormPerson from './components/FormPerson'
 import FormColor, { type Color } from './components/FormColor'
 import type { Person } from './components/FormPerson'
@@ -13,7 +13,6 @@ function App() {
 
   const [fade, setFade] = useState(true)
   const [client, setClient] = useState<Client>()
-  const [colores, setColores] = useState<Colores>()
 
   //service persona   
   const addPerson = async (person: Person) => {
@@ -52,8 +51,6 @@ function App() {
       col.idTipo = parseInt(color.tipo)
 
       const response = await api.post<Colores>("api/color/register", col)
-
-      setColores(response)
 
       await addPerColor(response.idColor)
     }
@@ -168,3 +165,4 @@ function App() {
 }
 
 export default App
+

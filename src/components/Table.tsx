@@ -19,7 +19,7 @@ interface Props {
 
 function Row(props: { row: ColorList }) {
     const { row } = props
-    const [open, setOpen] = React.useState(false)
+  
 
     return (
         <React.Fragment>
