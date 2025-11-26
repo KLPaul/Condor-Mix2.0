@@ -6,12 +6,14 @@ import CollapsibleTable from './components/Table'
 import { api } from './services/ApiService'
 import { Colores } from './models/colores'
 import { Client } from './models/client'
+import { PerColor } from './models/perColor'
 
 function App() {
   const [activeTab, setActiveTab] = useState<'inicio' | 'busqueda'>('inicio')
 
   const [fade, setFade] = useState(true)
   const [client, setClient] = useState<Client>()
+  const [colores, setColores] = useState<Colores>()
 
   //service persona   
   const addPerson = async (person: Person) => {
@@ -22,8 +24,9 @@ function App() {
         const p = new Client()
         p.cedula = person.cedula
         p.nombre = person.name
-        const response = await api.post("api/personas/register", p)
-        console.log(response)
+        const response = await api.post<Client>("api/personas/register", p)
+        procesClient(response)
+
         break;
 
       default:
@@ -31,14 +34,14 @@ function App() {
     }
   }
 
-  const procesClient = (client:Client) => {
+  const procesClient = (client: Client) => {
     setClient(client)
   }
 
-  const addColor = (color: Color) => {
+  const addColor = async (color: Color) => {
 
     const allData = Object.values(color).every(value => value.trim() !== "")
-    var data: any
+
     if (allData) {
       const col = new Colores()
       col.codigo = color.code
@@ -48,14 +51,31 @@ function App() {
       col.idMarca = parseInt(color.calidad)
       col.idTipo = parseInt(color.tipo)
 
-      api.post("/api/color/register", col).then(data => {
+      const response = await api.post<Colores>("api/color/register", col)
 
-      })
+      setColores(response)
 
+      await addPerColor(response.idColor)
     }
 
   }
 
+  const addPerColor = async (idColor: number) => {
+
+    if (idColor && client && client.id) {
+      console.log("registrar color")
+      const tem = new PerColor()
+      tem.colorId = idColor
+      tem.personaId = client.id
+
+      await api.post<PerColor>("api/percolor/register", tem)
+
+      const nuevo = { ...client };
+      setClient(nuevo);
+      
+    }
+
+  }
 
   // Transición suave al cambiar de pestaña
   const handleTabChange = (tab: 'inicio' | 'busqueda') => {

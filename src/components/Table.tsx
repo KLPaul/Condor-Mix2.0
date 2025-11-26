@@ -1,5 +1,4 @@
 import * as React from 'react'
-import IconButton from '@mui/material/IconButton'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -7,20 +6,18 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import { Client } from '../models/client'
 import { useEffect, useState } from 'react'
 import { api } from '../services/ApiService'
 import type { ColorList } from '../models/colorList'
 
 
-interface Props{
-    client?:Client
+interface Props {
+    client?: Client
 }
 
 
-function Row(props: { row:ColorList}) {
+function Row(props: { row: ColorList }) {
     const { row } = props
     const [open, setOpen] = React.useState(false)
 
@@ -32,9 +29,9 @@ function Row(props: { row:ColorList}) {
                     '&:hover': { backgroundColor: '#fff5f5' }, // suave fondo rojo claro
                 }}
             >
-            
+
                 <TableCell component="th" scope="row" className="font-semibold text-gray-800">
-                    {row.colorCod+" "+row.colorName}
+                    {row.colorCod + " " + row.colorName}
                 </TableCell>
                 <TableCell align="right" className="text-gray-700">
                     {row.tipo}
@@ -55,13 +52,12 @@ function Row(props: { row:ColorList}) {
 
 
 
-export default function CollapsibleTable({client}:Props) {
-   
-       const [listColor, setListColor] = useState<ColorList[]>([])
+export default function CollapsibleTable({ client }: Props) {
 
+    const [listColor, setListColor] = useState<ColorList[]>([])
 
-    useEffect(()=>{
-        
+    useEffect(() => {
+
         if (client?.id !== 0 && client !== undefined) {
             const addColors = async () => {
                 const response = await api.getSearchPathVariable<ColorList[]>("api/percolor/getColors/", client!.id)
@@ -70,16 +66,16 @@ export default function CollapsibleTable({client}:Props) {
             addColors()
         }
 
-    },[client])
+    }, [client])
 
-    return (   client?.id !== 0 && client !== undefined && 
-       ( <div className="bg-white border border-red-600 rounded-xl shadow-md flex w-full max-w-5xl overflow-hidden">
+    return (client?.id !== 0 && client !== undefined &&
+        (<div className="bg-white border border-red-600 rounded-xl shadow-md flex w-full max-w-5xl overflow-hidden">
             {/* Franja lateral roja */}
             <div className="bg-red-600 w-2 rounded-r-[2rem]"></div>
 
             <div className="flex flex-col p-6 w-full">
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                    Lista — Colores de Persona 
+                    Lista — Colores de Persona
                 </h2>
 
                 <TableContainer
@@ -91,13 +87,13 @@ export default function CollapsibleTable({client}:Props) {
                             <TableRow className="bg-red-600">
                                 <TableCell colSpan={6}>
                                     <span className="text-white font-semibold">
-                                       {client?.cedula +" "+ client?.nombre}
+                                        {client?.cedula + " " + client?.nombre}
                                     </span>
                                 </TableCell>
                             </TableRow>
 
                             <TableRow className="bg-red-50">
-                               
+
                                 <TableCell className="font-semibold text-gray-800">
                                     COD.COLOR
                                 </TableCell>

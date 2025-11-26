@@ -129,7 +129,7 @@ export default function FormPerson({ onSubmit, sendPerson }: FormPersonProps) {
                 )}
                 {option === "buscar" && (
                     <Autocomplete
-                        getOptionLabel={(object => `${object.nombre} ${object.cedula}`)}
+                        getOptionLabel={(object => `${object.cedula} ${object.nombre}`)}
                         onChange={(_event, value) => {
                             if (value) {
 
